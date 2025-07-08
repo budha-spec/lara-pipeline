@@ -13,7 +13,7 @@ services:
       - key: APP_DEBUG
         value: "false"
       - key: APP_KEY
-        sync: true    # will sync with Render's secret store or set manually
+        sync: true
       - key: APP_URL
         value: https://lara-pipeline.onrender.com
       - key: DB_CONNECTION
