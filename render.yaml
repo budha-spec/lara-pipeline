@@ -1,18 +1,23 @@
 services:
   - type: web
-    name: lara-render
-    env: php
-    region: oregon
-    plan: starter
+    name: laravel-app
+    env: node
+    plan: free
     branch: main
-    buildCommand: composer install --no-dev --optimize-autoloader
-    startCommand: php artisan serve --host 0.0.0.0 --port 10000
+    buildCommand: |
+      sudo apt-get update
+      sudo apt-get install -y curl unzip php-cli php-mbstring php-xml php-bcmath php-curl php-mysql php-zip php-tokenizer php-pdo git
+      curl -sS https://getcomposer.org/installer | php
+      php composer.phar install --no-dev --optimize-autoloader
+      chmod -R 775 storage bootstrap/cache
+    startCommand: php artisan serve --host=0.0.0.0 --port=10000
     envVars:
       - key: APP_ENV
         value: production
-      - key: APP_DEBUG
-        value: "false"
       - key: APP_KEY
         sync: true
+      - key: APP_DEBUG
+        value: false
       - key: APP_URL
         value: https://lara-pipeline.onrender.com
+
