@@ -1,16 +1,27 @@
 services:
   - type: web
     name: laravel-app
-    env: docker
-    plan: free
-    dockerfilePath: Dockerfile
-    startCommand: echo "Starting via Dockerfile"
+    env: php
+    region: oregon
+    plan: starter
+    branch: main
+    buildCommand: |
+      curl -sS https://getcomposer.org/installer | php
+      php composer.phar install --no-dev --optimize-autoloader
+      php artisan config:clear
+      php artisan route:clear
+      php artisan view:clear
+    startCommand: php artisan serve --host 0.0.0.0 --port 10000
     envVars:
       - key: APP_ENV
         value: production
       - key: APP_KEY
-        sync: true
-      - key: DB_CONNECTION
-        value: sqlite
-      - key: DB_DATABASE
-        value: ':memory:'
+        sync: true   # Set manually or auto-generate
+      - key: APP_DEBUG
+        value: "false"
+      - key: APP_URL
+        value: https://lara-pipeline.onrender.com
+    disk:
+      name: data
+      mountPath: /data
+      sizeGb: 1
