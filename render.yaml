@@ -4,8 +4,13 @@ services:
     env: docker
     plan: free
     dockerfilePath: Dockerfile
+    startCommand: echo "Starting via Dockerfile"
     envVars:
       - key: APP_ENV
         value: production
       - key: APP_KEY
         value: base64:rOXzPfR2/ZEMtE5gzDMqj3NMk4+z3OSWM2cJWYTM7mY=
+      - key: DB_CONNECTION
+        value: sqlite
+      - key: DB_DATABASE
+        value: ':memory:'
