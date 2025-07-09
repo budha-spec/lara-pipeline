@@ -1,26 +1,28 @@
-# Dockerfile
 FROM php:8.1-fpm-alpine
 
-# Install dependencies
-RUN apk add --no-cache nginx supervisor bash \
-    && docker-php-ext-install pdo pdo_mysql
+RUN apt-get update && apt-get install -y \
+    unzip \
+    git \
+    curl \
+    zip \
+    libzip-dev \
+    libonig-dev \
+    libxml2-dev \
+    libpq-dev \
+    libcurl4-openssl-dev \
+    libssl-dev \
+    && docker-php-ext-install pdo pdo_mysql zip bcmath mbstring tokenizer xml
 
-# Copy Laravel app code
-COPY . /var/www/html
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-WORKDIR /var/www/html
+WORKDIR /app
 
-# Install Composer and dependencies
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+COPY . .
+
 RUN composer install --no-dev --optimize-autoloader
 
-# Copy nginx config
-COPY ./nginx.conf /etc/nginx/nginx.conf
+RUN chmod -R 775 storage bootstrap/cache
 
-# Supervisor config to run PHP-FPM + Nginx
-COPY ./supervisord.conf /etc/supervisord.conf
-
-# Expose port 10000 as Render expects
 EXPOSE 10000
 
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
+CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=10000"]
