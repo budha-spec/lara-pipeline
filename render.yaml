@@ -1,23 +1,11 @@
 services:
   - type: web
     name: laravel-app
-    env: node
+    env: docker
     plan: free
-    branch: main
-    buildCommand: |
-      sudo apt-get update
-      sudo apt-get install -y curl unzip php-cli php-mbstring php-xml php-bcmath php-curl php-mysql php-zip php-tokenizer php-pdo git
-      curl -sS https://getcomposer.org/installer | php
-      php composer.phar install --no-dev --optimize-autoloader
-      chmod -R 775 storage bootstrap/cache
-    startCommand: php artisan serve --host=0.0.0.0 --port=10000
+    dockerfilePath: Dockerfile
     envVars:
       - key: APP_ENV
         value: production
       - key: APP_KEY
-        sync: true
-      - key: APP_DEBUG
-        value: false
-      - key: APP_URL
-        value: https://lara-pipeline.onrender.com
-
+        value: base64:rOXzPfR2/ZEMtE5gzDMqj3NMk4+z3OSWM2cJWYTM7mY=
