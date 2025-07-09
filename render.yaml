@@ -1,18 +1,16 @@
 services:
   - type: web
     name: laravel-app
-    env: php
-    plan: starter
-    region: oregon
-    branch: main
-    buildCommand: composer install --no-dev --optimize-autoloader
-    startCommand: php artisan serve --host 0.0.0.0 --port 10000
+    env: docker
+    plan: free
+    dockerfilePath: Dockerfile
+    startCommand: echo "Starting via Dockerfile"
     envVars:
       - key: APP_ENV
         value: production
-      - key: APP_DEBUG
-        value: "false"
       - key: APP_KEY
         sync: true
-      - key: APP_URL
-        value: https://laravel-app.onrender.com
+      - key: DB_CONNECTION
+        value: sqlite
+      - key: DB_DATABASE
+        value: ':memory:'
